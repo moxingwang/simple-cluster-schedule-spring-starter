@@ -12,9 +12,7 @@ public class TaskMessageEventContainer {
 
     int MESSAGE_TYPE_SEND = 0;
 
-    //发送心跳广播
 
-    //接收到心跳广播
 
     //发送新任务
 
