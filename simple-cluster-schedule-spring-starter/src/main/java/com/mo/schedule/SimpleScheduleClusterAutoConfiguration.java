@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableConfigurationProperties(ScheduleClusterProperties.class)
-//@Import(TaskMessageService.class)
+//@Import(RedisCircularizeStrategyConfiguration.class)
 @ConditionalOnClass(TaskMessageEventContainer.class)//当RedisCircularizeStrategy在类路径中时并且当前容器中没有这个Bean的情况下,自动配置
 public class SimpleScheduleClusterAutoConfiguration {
 
