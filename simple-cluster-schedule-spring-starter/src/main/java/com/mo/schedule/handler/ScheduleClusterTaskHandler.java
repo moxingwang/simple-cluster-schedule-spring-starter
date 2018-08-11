@@ -6,4 +6,6 @@ package com.mo.schedule.handler;
  **/
 public class ScheduleClusterTaskHandler {
 
+    //获取所有任务class
+
 }
