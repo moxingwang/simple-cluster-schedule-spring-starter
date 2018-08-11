@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 @EnableConfigurationProperties(ScheduleClusterProperties.class)
@@ -23,8 +24,9 @@ public class SimpleScheduleClusterAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(TaskMessageEventContainer.class)//当容器中没有指定Bean的情况下
-    public TaskMessageEventContainer defaultTaskMessageEventContainer() {
+    public TaskMessageEventContainer defaultTaskMessageEventContainer(RedisTemplate redisTemplate) {
         TaskMessageEventContainer taskMessageEventContainer = new TaskMessageEventContainer();
+        taskMessageEventContainer.setRedisTemplate(redisTemplate);
         return taskMessageEventContainer;
     }
 

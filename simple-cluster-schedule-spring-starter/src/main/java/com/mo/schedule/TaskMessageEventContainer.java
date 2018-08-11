@@ -1,10 +1,14 @@
 package com.mo.schedule;
 
+import org.springframework.data.redis.core.RedisTemplate;
+
 /**
  * @description:
  * @author: MoXingwang 2018-08-11 19:08
  **/
-public class TaskMessageEventContainer{
+public class TaskMessageEventContainer {
+
+    private RedisTemplate redisTemplate;
 
     int MESSAGE_TYPE_SEND = 0;
 
@@ -30,4 +34,8 @@ public class TaskMessageEventContainer{
 
     //master定时巡检和重新编排任务
 
+
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 }
