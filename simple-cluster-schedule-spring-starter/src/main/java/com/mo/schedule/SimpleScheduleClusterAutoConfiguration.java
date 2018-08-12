@@ -5,7 +5,7 @@ package com.mo.schedule;
  * @author: MoXingwang 2018-08-11 15:01
  **/
 
-import com.mo.schedule.circularize.HeartbeatStrategy;
+import com.mo.schedule.circularize.RedisCircularizeStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -19,26 +19,26 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableConfigurationProperties(ScheduleClusterProperties.class)
 //@Import(RedisCircularizeStrategyConfiguration.class)
-@ConditionalOnClass({TaskMessageEventContainer.class, HeartbeatStrategy.class})
 //当RedisCircularizeStrategy在类路径中时并且当前容器中没有这个Bean的情况下,自动配置
+@ConditionalOnClass({TaskContainer.class, RedisCircularizeStrategy.class})
 public class SimpleScheduleClusterAutoConfiguration {
 
     @Autowired
     private ScheduleClusterProperties scheduleClusterProperties;
 
     @Bean
-    @ConditionalOnMissingBean(TaskMessageEventContainer.class)//当容器中没有指定Bean的情况下
-    public TaskMessageEventContainer defaultTaskMessageEventContainer(RedisTemplate redisTemplate) {
-        TaskMessageEventContainer taskMessageEventContainer = new TaskMessageEventContainer();
-        taskMessageEventContainer.setRedisTemplate(redisTemplate);
-        return taskMessageEventContainer;
+    @ConditionalOnMissingBean(TaskContainer.class)//当容器中没有指定Bean的情况下
+    public TaskContainer defaultTaskContainer(RedisTemplate redisTemplate) {
+        TaskContainer taskContainer = new TaskContainer();
+        return taskContainer;
     }
 
     @Bean
-    @ConditionalOnMissingBean(HeartbeatStrategy.class)//当容器中没有指定Bean的情况下
-    public HeartbeatStrategy defaultHeartbeatStrategy(RedisTemplate redisTemplate) {
-        HeartbeatStrategy heartbeatStrategy = new HeartbeatStrategy();
-        return heartbeatStrategy;
+    @ConditionalOnMissingBean(RedisCircularizeStrategy.class)
+    //使用者可以使用@Qualifier("redisTemplate") RedisTemplate这种方式区分具体某个RedisTemplate bean
+    public RedisCircularizeStrategy defaultRedisCircularizeStrategy(RedisTemplate redisTemplate) {
+        RedisCircularizeStrategy redisCircularizeStrategy = new RedisCircularizeStrategy(redisTemplate);
+        return redisCircularizeStrategy;
     }
 
 }

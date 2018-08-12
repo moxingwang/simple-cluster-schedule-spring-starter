@@ -1,7 +1,7 @@
 package com.mo.lottery;
 
+import com.mo.schedule.RedisCircularizeStrategyConfiguration;
 import com.mo.schedule.annotation.EnableSimpleScheduleCluster;
-import com.mo.schedule.circularize.redis.RedisCircularizeStrategyConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
