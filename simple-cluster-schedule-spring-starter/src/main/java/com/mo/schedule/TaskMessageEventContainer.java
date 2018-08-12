@@ -1,6 +1,11 @@
 package com.mo.schedule;
 
+import com.alibaba.fastjson.JSON;
+import com.mo.schedule.circularize.CircularizeStrategy;
+import com.mo.schedule.entity.Task;
 import org.springframework.data.redis.core.RedisTemplate;
+
+import java.util.List;
 
 /**
  * @description:
@@ -9,12 +14,15 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class TaskMessageEventContainer {
 
     private RedisTemplate redisTemplate;
+    private CircularizeStrategy circularizeStrategy;
 
-    int MESSAGE_TYPE_SEND = 0;
+    //发布任务
+    public void publishTask(List<Task> tasks) {
+        for (Task task : tasks) {
+            redisTemplate.opsForSet().add(RedisKey.TASKS_KEY, JSON.toJSONString(task));
+        }
+    }
 
-
-
-    //发送新任务
 
     //收到新任务
 
@@ -32,6 +40,10 @@ public class TaskMessageEventContainer {
 
     //master定时巡检和重新编排任务
 
+
+    public void setCircularizeStrategy(CircularizeStrategy circularizeStrategy) {
+        this.circularizeStrategy = circularizeStrategy;
+    }
 
     public void setRedisTemplate(RedisTemplate redisTemplate) {
         this.redisTemplate = redisTemplate;

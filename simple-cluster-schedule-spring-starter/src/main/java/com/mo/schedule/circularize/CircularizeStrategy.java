@@ -15,4 +15,5 @@ public interface CircularizeStrategy {
      */
     void sendMessage(MessageEvent messageEvent);
 
+
 }

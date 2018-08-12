@@ -1,6 +1,6 @@
 package com.mo.schedule.circularize.redis;
 
-import com.mo.schedule.circularize.MessageListenerStrategy;
+import com.mo.schedule.RedisKey;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -19,7 +19,7 @@ public class RedisCircularizeStrategyConfiguration {
     RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(listenerAdapter, new PatternTopic(MessageListenerStrategy.STRATEGY_REDIS_KEY));
+        container.addMessageListener(listenerAdapter, new PatternTopic(RedisKey.STRATEGY_REDIS_KEY));
         return container;
     }
 

@@ -1,7 +1,9 @@
 package com.mo.schedule.circularize;
 
+import com.mo.schedule.RedisKey;
 import com.mo.schedule.util.IpUtil;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -10,8 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author: MoXingwang 2018-08-11 23:38
  **/
 public class HeartbeatStrategy {
-    String HEARTBEAT_REGISTRY_REDIS_KEY = "com:mo:simple:cluster:schedule:heartbeat:registry";
-
     private RedisTemplate redisTemplate;
 
     /**
@@ -21,13 +21,24 @@ public class HeartbeatStrategy {
     /**
      * 本地leader
      */
-    private static String localLeader = null;
+    private String localLeader = null;
 
     //启动后发送应用注册通知
-    protected void registry(){
-        redisTemplate.opsForSet().add(HEARTBEAT_REGISTRY_REDIS_KEY, IpUtil.getIp());
+    protected void registry() {
+        redisTemplate.opsForSet().add(RedisKey.HEARTBEAT_REGISTRY_REDIS_KEY, IpUtil.getIp());
     }
 
     //定时向leader发送消息，收到leader的回复广播验证本地leader
+
+
+    public String getLocalLeader() {
+        return localLeader;
+    }
+
+    //定时汇报任务
+    @Scheduled(fixedRate = 5000)
+    public void reportCurrentTime() {
+        System.out.println("现在时间：" );
+    }
 
 }
