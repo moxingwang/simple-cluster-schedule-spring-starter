@@ -6,8 +6,9 @@ package com.mo.schedule;
  **/
 public interface RedisKey {
     String BASE = "com:mo:simple:cluster:schedule:";
-    String HEARTBEAT_REGISTRY_REDIS_KEY = BASE + "heartbeat:registry";
-    String STRATEGY_REDIS_KEY_BROADCAST = BASE + "broadcast";
-    String TASKS_KEY = BASE + "tasks";
+    String REGISTRY_MACHINE_LIST = BASE + "registry";
+    String STRATEGY_BROADCAST = BASE + "broadcast";
+    String TASKS_OWNER = BASE + "tasks:";
+    String LEADER = BASE + "leader";
 
 }

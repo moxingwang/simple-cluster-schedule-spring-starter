@@ -25,7 +25,7 @@ public class RedisCircularizeStrategyConfiguration {
     RedisMessageListenerContainer redisContainer(RedisTemplate redisTemplate,RedisConnectionFactory factory) {
         final RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(factory);
-        container.addMessageListener(messageListener(redisTemplate), new PatternTopic(RedisKey.STRATEGY_REDIS_KEY_BROADCAST));
+        container.addMessageListener(messageListener(redisTemplate), new PatternTopic(RedisKey.STRATEGY_BROADCAST));
         return container;
     }
 

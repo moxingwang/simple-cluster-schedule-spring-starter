@@ -1,10 +1,16 @@
 package com.mo.schedule;
 
+import com.mo.schedule.entity.Task;
+
+import java.util.Set;
+
 /**
  * @description:
  * @author: MoXingwang 2018-08-11 19:08
  **/
 public class TaskContainer {
+
+//    private static final Set<Task> tasks = new COn
 
 
     //收到新任务
