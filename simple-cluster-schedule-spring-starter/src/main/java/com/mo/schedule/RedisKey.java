@@ -8,7 +8,8 @@ public interface RedisKey {
     String BASE = "com:mo:simple:cluster:schedule:";
     String REGISTRY_MACHINE_LIST = BASE + "registry";
     String STRATEGY_BROADCAST = BASE + "broadcast";
-    String TASKS_OWNER = BASE + "tasks:";
+    String TASKS_OWNER = BASE + "task:owner:";
+    String TASKS = BASE + "tasks:";
     String LEADER = BASE + "leader";
 
 }

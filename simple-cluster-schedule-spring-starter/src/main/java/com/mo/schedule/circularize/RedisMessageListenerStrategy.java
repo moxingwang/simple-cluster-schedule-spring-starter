@@ -22,6 +22,7 @@ public class RedisMessageListenerStrategy implements MessageListener {
     public void onMessage(Message message, byte[] bytes) {
         MessageEvent messageEvent = (MessageEvent) redisTemplate.getValueSerializer().deserialize(message.getBody());
 
+        //添加任务通知
 
         System.out.println(JSON.toJSONString(messageEvent));
     }

@@ -2,14 +2,13 @@ package com.mo.schedule.circularize;
 
 import com.alibaba.fastjson.JSON;
 import com.mo.schedule.RedisKey;
+import com.mo.schedule.TaskContainer;
 import com.mo.schedule.entity.MessageEvent;
 import com.mo.schedule.entity.Task;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,6 +20,7 @@ public class RedisCircularizeStrategy {
     public static final String MACHINE_ID = UUID.randomUUID().toString();
 
     private RedisTemplate redisTemplate;
+    private TaskContainer taskContainer;
 
     public static final int MESSAGE_TYPE_TASK_PUSH = 0;
 
@@ -32,29 +32,24 @@ public class RedisCircularizeStrategy {
     //定时向leader发送消息，收到leader的回复广播验证本地leader
 
 
-    //定时任务处理
-    @Scheduled(fixedRate = 10000)
-    public void reportCurrentTime() {
-        if (!isLeader()) {
-            //定时更新本地自己的任务状态到redis
-
-        } else {
-            //编排任务: 获取所有任务，做统一编排
-            Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
-
-
-            //再分派任务的时候检测对应follower的状态{follower收到任务并且应答，说明follower还live}
-
-        }
-
-    }
-
-    //leader心跳
     @Scheduled(fixedRate = 3000)
     public void leaderHeartbeat() {
         if (isLeader()) {
             //维持心跳
             redisTemplate.opsForValue().set(RedisKey.LEADER, MACHINE_ID, 5, TimeUnit.SECONDS);
+
+            //编排任务
+            Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
+
+            Map<String, Long> arrange = new HashMap<>();
+
+            for (String machine : machines) {
+                arrange.put(machine, redisTemplate.opsForSet().size(RedisKey.REGISTRY_MACHINE_LIST));
+            }
+
+            //todo 划分任务{均分任务，以及加入新的任务}
+            
+
         } else {
             //检测leader的存在性
             Object leader = redisTemplate.opsForValue().get(RedisKey.LEADER);
@@ -76,7 +71,7 @@ public class RedisCircularizeStrategy {
 
 
     //启动后发送应用注册通知
-    public RedisCircularizeStrategy(RedisTemplate redisTemplate) {
+    public RedisCircularizeStrategy(RedisTemplate redisTemplate, TaskContainer taskContainer) {
         this.redisTemplate = redisTemplate;
         redisTemplate.opsForSet().add(RedisKey.REGISTRY_MACHINE_LIST, RedisCircularizeStrategy.MESSAGE_TYPE_TASK_PUSH);
 
@@ -88,7 +83,7 @@ public class RedisCircularizeStrategy {
     //发布任务
     public void publishTask(List<Task> tasks) {
         for (Task task : tasks) {
-            redisTemplate.opsForSet().add(RedisKey.TASKS_OWNER + MACHINE_ID, JSON.toJSONString(task));
+            redisTemplate.opsForSet().add(RedisKey.TASKS, JSON.toJSONString(task));
         }
     }
 

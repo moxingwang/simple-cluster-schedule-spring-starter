@@ -29,16 +29,16 @@ public class SimpleScheduleClusterAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(TaskContainer.class)//当容器中没有指定Bean的情况下
-    public TaskContainer defaultTaskContainer(RedisTemplate redisTemplate,ApplicationContext applicationContext) {
-        TaskContainer taskContainer = new TaskContainer(redisTemplate,applicationContext);
+    public TaskContainer defaultTaskContainer(RedisTemplate redisTemplate, ApplicationContext applicationContext) {
+        TaskContainer taskContainer = new TaskContainer(redisTemplate, applicationContext);
         return taskContainer;
     }
 
     @Bean
     @ConditionalOnMissingBean(RedisCircularizeStrategy.class)
     //使用者可以使用@Qualifier("redisTemplate") RedisTemplate这种方式区分具体某个RedisTemplate bean
-    public RedisCircularizeStrategy defaultRedisCircularizeStrategy(RedisTemplate redisTemplate) {
-        RedisCircularizeStrategy redisCircularizeStrategy = new RedisCircularizeStrategy(redisTemplate);
+    public RedisCircularizeStrategy defaultRedisCircularizeStrategy(RedisTemplate redisTemplate, TaskContainer taskContainer) {
+        RedisCircularizeStrategy redisCircularizeStrategy = new RedisCircularizeStrategy(redisTemplate, taskContainer);
         return redisCircularizeStrategy;
     }
 
