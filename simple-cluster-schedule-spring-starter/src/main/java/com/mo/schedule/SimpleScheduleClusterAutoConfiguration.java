@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,8 +29,8 @@ public class SimpleScheduleClusterAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(TaskContainer.class)//当容器中没有指定Bean的情况下
-    public TaskContainer defaultTaskContainer(RedisTemplate redisTemplate) {
-        TaskContainer taskContainer = new TaskContainer();
+    public TaskContainer defaultTaskContainer(RedisTemplate redisTemplate,ApplicationContext applicationContext) {
+        TaskContainer taskContainer = new TaskContainer(redisTemplate,applicationContext);
         return taskContainer;
     }
 
