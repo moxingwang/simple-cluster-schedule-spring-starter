@@ -2,7 +2,6 @@ package com.mo.schedule.circularize;
 
 import com.alibaba.fastjson.JSON;
 import com.mo.schedule.entity.MessageEvent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.core.RedisTemplate;
