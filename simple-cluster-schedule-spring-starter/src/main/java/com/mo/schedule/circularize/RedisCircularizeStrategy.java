@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.mo.schedule.RedisKey;
 import com.mo.schedule.TaskContainer;
 import com.mo.schedule.entity.MessageEvent;
+import com.mo.schedule.entity.MessageType;
 import com.mo.schedule.entity.Task;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -88,8 +89,17 @@ public class RedisCircularizeStrategy {
 
     //todo 划分任务{均分任务，以及加入新的任务}
     private void arrangeTasks(Map<String, Long> arrange) {
-        for (Map.Entry<String, Long> stringLongEntry : arrange.entrySet()) {
+        Long totalUnExeTaskSize = redisTemplate.opsForSet().size(RedisKey.TASKS);
+        if(totalUnExeTaskSize<=0){
+            return;
+        }
+        for (Map.Entry<String, Long> entry : arrange.entrySet()) {
+            MessageEvent messageEvent = new MessageEvent();
+            messageEvent.setType(MessageType.NEW_TASK.getValue());
+            if(entry.getValue()<50){
 
+            }
+            sendBroadcast(messageEvent);
         }
     }
 
@@ -107,13 +117,6 @@ public class RedisCircularizeStrategy {
 
         //key永久存储
         redisTemplate.expire(RedisKey.REGISTRY_MACHINE_LIST, Integer.MAX_VALUE, TimeUnit.DAYS);
-    }
-
-    //发布任务
-    public void publishTask(List<Task> tasks) {
-        for (Task task : tasks) {
-            redisTemplate.opsForSet().add(RedisKey.TASKS, JSON.toJSONString(task));
-        }
     }
 
     public boolean isLeader() {

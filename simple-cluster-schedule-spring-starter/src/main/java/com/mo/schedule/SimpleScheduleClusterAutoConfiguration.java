@@ -13,15 +13,16 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @EnableScheduling
 @EnableConfigurationProperties(ScheduleClusterProperties.class)
-//@Import(RedisCircularizeStrategyConfiguration.class)
+@Import(RedisCircularizeStrategyConfiguration.class)
 //当RedisCircularizeStrategy在类路径中时并且当前容器中没有这个Bean的情况下,自动配置
-@ConditionalOnClass({TaskContainer.class, RedisCircularizeStrategy.class})
+@ConditionalOnClass({TaskContainer.class, RedisCircularizeStrategy.class, SimpleScheduleClusterPublisher.class})
 public class SimpleScheduleClusterAutoConfiguration {
 
     @Autowired
@@ -42,4 +43,11 @@ public class SimpleScheduleClusterAutoConfiguration {
         return redisCircularizeStrategy;
     }
 
+
+    @Bean
+    @ConditionalOnMissingBean(SimpleScheduleClusterPublisher.class)
+    public SimpleScheduleClusterPublisher defaultSimpleScheduleClusterPublisher(RedisTemplate redisTemplate) {
+        SimpleScheduleClusterPublisher simpleScheduleClusterPublisher = new SimpleScheduleClusterPublisher(redisTemplate);
+        return simpleScheduleClusterPublisher;
+    }
 }
