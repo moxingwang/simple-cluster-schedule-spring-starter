@@ -46,6 +46,7 @@ public class RedisCircularizeStrategy {
             Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
 
             //检查machines的心跳
+            Set<String> realMachines = new HashSet<>();
             for (String machine : machines) {
                 if (!MACHINE_ID.equals(machine)) {
                     Object machineObj = redisTemplate.opsForValue().get(RedisKey.FOLLOWER + machine);
@@ -62,13 +63,15 @@ public class RedisCircularizeStrategy {
 
                         machines.remove(machine);
                         redisTemplate.opsForSet().remove(RedisKey.REGISTRY_MACHINE_LIST, machine);
+                    }else {
+                        realMachines.add(machine);
                     }
                 }
             }
 
             Map<String, Long> arrange = new HashMap<>();
 
-            for (String machine : machines) {
+            for (String machine : realMachines) {
                 arrange.put(machine, redisTemplate.opsForSet().size(RedisKey.TASKS_OWNER + machine));
             }
 
@@ -98,16 +101,21 @@ public class RedisCircularizeStrategy {
                 List<Task> tasks = new ArrayList<>();
                 for (int i = 0; i < 50; i++) {
                     Task task = (Task) redisTemplate.opsForSet().pop(RedisKey.TASKS);
+                    if(null == task){
+                        break;
+                    }
                     redisTemplate.opsForSet().add(RedisKey.TASKS_OWNER + entry.getKey(), task);
                     tasks.add(task);
                 }
 
-                MessageEvent messageEvent = new MessageEvent();
-                messageEvent.setFormId(MACHINE_ID);
-                messageEvent.setToId(entry.getKey());
-                messageEvent.setType(MessageType.NEW_TASK_EVENT.getValue());
-                messageEvent.setTasks(tasks);
-                sendBroadcast(messageEvent);
+                if(!tasks.isEmpty()){
+                    MessageEvent messageEvent = new MessageEvent();
+                    messageEvent.setFormId(MACHINE_ID);
+                    messageEvent.setToId(entry.getKey());
+                    messageEvent.setType(MessageType.NEW_TASK_EVENT.getValue());
+                    messageEvent.setTasks(tasks);
+                    sendBroadcast(messageEvent);
+                }
             }
         }
     }
