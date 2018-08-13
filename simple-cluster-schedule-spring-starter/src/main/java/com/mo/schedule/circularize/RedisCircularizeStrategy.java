@@ -117,7 +117,7 @@ public class RedisCircularizeStrategy {
     //启动后发送应用注册通知
     public RedisCircularizeStrategy(RedisTemplate redisTemplate, TaskContainer taskContainer) {
         this.redisTemplate = redisTemplate;
-        redisTemplate.opsForSet().add(RedisKey.REGISTRY_MACHINE_LIST, RedisCircularizeStrategy.MESSAGE_TYPE_TASK_PUSH);
+        redisTemplate.opsForSet().add(RedisKey.REGISTRY_MACHINE_LIST, MACHINE_ID);
 
 
         //key永久存储
