@@ -1,4 +1,4 @@
-package com.mo.schedule;
+package com.mo.schedule.entity;
 
 /**
  * @description:

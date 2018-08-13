@@ -6,7 +6,7 @@ package com.mo.schedule.entity;
  **/
 public enum MessageType {
 
-    NEW_TASK(0),
+    NEW_TASK_EVENT(0),
     EXECUTING(1);
 
     private int value;

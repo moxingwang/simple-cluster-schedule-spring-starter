@@ -1,16 +1,18 @@
 package com.mo.schedule.circularize;
 
 import com.alibaba.fastjson.JSON;
-import com.mo.schedule.RedisKey;
 import com.mo.schedule.TaskContainer;
 import com.mo.schedule.entity.MessageEvent;
 import com.mo.schedule.entity.MessageType;
-import com.mo.schedule.entity.Task;
+import com.mo.schedule.entity.RedisKey;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -87,19 +89,22 @@ public class RedisCircularizeStrategy {
         }
     }
 
-    //todo 划分任务{均分任务，以及加入新的任务}
     private void arrangeTasks(Map<String, Long> arrange) {
         Long totalUnExeTaskSize = redisTemplate.opsForSet().size(RedisKey.TASKS);
-        if(totalUnExeTaskSize<=0){
+        if (totalUnExeTaskSize <= 0) {
             return;
         }
         for (Map.Entry<String, Long> entry : arrange.entrySet()) {
-            MessageEvent messageEvent = new MessageEvent();
-            messageEvent.setType(MessageType.NEW_TASK.getValue());
-            if(entry.getValue()<50){
+            totalUnExeTaskSize = redisTemplate.opsForSet().size(RedisKey.TASKS);
+            if (entry.getValue() < 50 && totalUnExeTaskSize > 0) {
+                for (int i = 0; i < 50; i++) {
+                    redisTemplate.opsForSet().add(RedisKey.TASKS_OWNER + entry.getKey(), redisTemplate.opsForSet().pop(RedisKey.TASKS));
+                }
 
+                MessageEvent messageEvent = new MessageEvent();
+                messageEvent.setType(MessageType.NEW_TASK_EVENT.getValue());
+                sendBroadcast(messageEvent);
             }
-            sendBroadcast(messageEvent);
         }
     }
 

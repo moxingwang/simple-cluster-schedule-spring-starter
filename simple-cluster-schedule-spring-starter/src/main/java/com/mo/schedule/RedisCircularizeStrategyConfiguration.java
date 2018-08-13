@@ -1,6 +1,7 @@
 package com.mo.schedule;
 
 import com.mo.schedule.circularize.RedisMessageListenerStrategy;
+import com.mo.schedule.entity.RedisKey;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
