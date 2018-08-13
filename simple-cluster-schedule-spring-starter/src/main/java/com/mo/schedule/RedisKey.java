@@ -11,5 +11,6 @@ public interface RedisKey {
     String TASKS_OWNER = BASE + "task:owner:";
     String TASKS = BASE + "tasks:";
     String LEADER = BASE + "leader";
+    String FOLLOWER = BASE + "follower:";
 
 }

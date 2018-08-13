@@ -7,6 +7,7 @@ import com.mo.schedule.entity.MessageEvent;
 import com.mo.schedule.entity.Task;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -34,12 +35,35 @@ public class RedisCircularizeStrategy {
 
     @Scheduled(fixedRate = 3000)
     public void leaderHeartbeat() {
+        //心跳维持
         if (isLeader()) {
-            //维持心跳
             redisTemplate.opsForValue().set(RedisKey.LEADER, MACHINE_ID, 5, TimeUnit.SECONDS);
+        } else {
+            redisTemplate.opsForValue().set(RedisKey.FOLLOWER + MACHINE_ID, "1", 5, TimeUnit.SECONDS);
+        }
 
-            //编排任务
+        if (isLeader()) {
+            //编排任务; 检查follower心跳
             Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
+
+            //检查machines的心跳
+            for (String machine : machines) {
+                Object machineObj = redisTemplate.opsForValue().get(RedisKey.FOLLOWER + machine);
+                if (null == machineObj) {
+                    //清除这台机器并且收回所有任务
+
+                    //todo 添加事务
+                    Set<String> tasks = redisTemplate.opsForSet().members(RedisKey.TASKS_OWNER + machine);
+                    if (!CollectionUtils.isEmpty(tasks)) {
+                        for (String task : tasks) {
+                            redisTemplate.opsForSet().add(RedisKey.TASKS, JSON.toJSONString(task));
+                        }
+                    }
+
+                    machines.remove(machine);
+                    redisTemplate.opsForSet().remove(RedisKey.REGISTRY_MACHINE_LIST, machine);
+                }
+            }
 
             Map<String, Long> arrange = new HashMap<>();
 
@@ -48,7 +72,7 @@ public class RedisCircularizeStrategy {
             }
 
             //todo 划分任务{均分任务，以及加入新的任务}
-            
+
 
         } else {
             //检测leader的存在性
