@@ -12,9 +12,11 @@ import org.springframework.data.redis.core.RedisTemplate;
  **/
 public class RedisMessageListenerStrategy implements MessageListener {
     private RedisTemplate redisTemplate;
+    private RedisCircularizeStrategy redisCircularizeStrategy;
 
-    public RedisMessageListenerStrategy(RedisTemplate redisTemplate) {
+    public RedisMessageListenerStrategy(RedisTemplate redisTemplate,RedisCircularizeStrategy redisCircularizeStrategy) {
         this.redisTemplate = redisTemplate;
+        this.redisCircularizeStrategy = redisCircularizeStrategy;
     }
 
     @Override
