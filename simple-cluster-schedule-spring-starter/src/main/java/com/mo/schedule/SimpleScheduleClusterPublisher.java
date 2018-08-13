@@ -46,6 +46,7 @@ public class SimpleScheduleClusterPublisher {
     public void publishTask(List<Task> tasks, String className) {
         for (Task task : tasks) {
             task.setTaskClassName(className);
+            task.setTaskName("name");
             redisTemplate.opsForSet().add(RedisKey.TASKS, task);
         }
     }

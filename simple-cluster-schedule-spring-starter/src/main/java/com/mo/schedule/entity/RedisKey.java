@@ -9,7 +9,7 @@ public interface RedisKey {
     String REGISTRY_MACHINE_LIST = BASE + "registry";
     String STRATEGY_BROADCAST = BASE + "broadcast";
     String TASKS_OWNER = BASE + "task:owner:";
-    String TASKS = BASE + "tasks:";
+    String TASKS = BASE + "tasks";
     String LEADER = BASE + "leader";
     String FOLLOWER = BASE + "follower:";
 

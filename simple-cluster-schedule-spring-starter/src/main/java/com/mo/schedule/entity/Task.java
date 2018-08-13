@@ -10,7 +10,6 @@ import java.util.Objects;
 public class Task implements Serializable {
     private String taskId;//指定uuid
     private String taskName;
-    private String taskGroupName;
     private String taskClassName;
 
     public String getTaskId() {
@@ -27,14 +26,6 @@ public class Task implements Serializable {
 
     public void setTaskName(String taskName) {
         this.taskName = taskName;
-    }
-
-    public String getTaskGroupName() {
-        return taskGroupName;
-    }
-
-    public void setTaskGroupName(String taskGroupName) {
-        this.taskGroupName = taskGroupName;
     }
 
     public String getTaskClassName() {

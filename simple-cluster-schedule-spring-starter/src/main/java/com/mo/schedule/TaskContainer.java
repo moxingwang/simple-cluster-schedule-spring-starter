@@ -1,5 +1,6 @@
 package com.mo.schedule;
 
+import com.alibaba.fastjson.JSON;
 import com.mo.schedule.entity.RedisKey;
 import com.mo.schedule.entity.Task;
 import org.springframework.context.ApplicationContext;
@@ -33,7 +34,7 @@ public class TaskContainer {
 
     //收到新任务
     public void acceptNewTask(Task task) {
-        unExeTaskQueue.add(new TaskThread(task));
+        threadPool.submit(new TaskThread(task));
     }
 
     protected void finishTask(Task task) {
@@ -42,10 +43,11 @@ public class TaskContainer {
 
     public class TaskThread implements Runnable {
         private Task task;
-        ScheduleClusterTask scheduleClusterTask;
+        private ScheduleClusterTask scheduleClusterTask;
 
         public TaskThread(Task task) {
             this.task = task;
+            System.out.println("执行任务"+ JSON.toJSONString(task));
 
             String shortClassName = ClassUtils.getShortName(task.getTaskClassName());
             String beanName = Introspector.decapitalize(shortClassName);

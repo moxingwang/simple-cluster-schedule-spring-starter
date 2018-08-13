@@ -135,8 +135,10 @@ public class RedisCircularizeStrategy {
 
     public void onMessage(MessageEvent messageEvent) {
         if (MessageType.NEW_TASK_EVENT.getValue() == messageEvent.getType() && !CollectionUtils.isEmpty(messageEvent.getTasks())) {
-            //对比本地任务和远程任务
             for (Task task : messageEvent.getTasks()) {
+                if(null == task){
+                    continue;
+                }
                 taskContainer.acceptNewTask(task);
             }
         }
