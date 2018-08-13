@@ -14,6 +14,6 @@ import org.springframework.stereotype.Component;
 public class CommonTask implements ScheduleClusterTask {
     @Override
     public void start(Task task) {
-
+        System.out.println("111111111111111111");
     }
 }

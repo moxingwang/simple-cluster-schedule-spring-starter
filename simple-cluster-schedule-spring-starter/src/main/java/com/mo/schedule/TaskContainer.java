@@ -4,7 +4,9 @@ import com.mo.schedule.entity.RedisKey;
 import com.mo.schedule.entity.Task;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.util.ClassUtils;
 
+import java.beans.Introspector;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -31,11 +33,7 @@ public class TaskContainer {
 
     //收到新任务
     public void acceptNewTask(Task task) {
-        try {
-            unExeTaskQueue.add(new TaskThread(task));
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        unExeTaskQueue.add(new TaskThread(task));
     }
 
     protected void finishTask(Task task) {
@@ -46,9 +44,12 @@ public class TaskContainer {
         private Task task;
         ScheduleClusterTask scheduleClusterTask;
 
-        public TaskThread(Task task) throws ClassNotFoundException {
-            scheduleClusterTask = (ScheduleClusterTask) applicationContext.getBean(Class.forName(task.getTaskClassName()));
+        public TaskThread(Task task) {
             this.task = task;
+
+            String shortClassName = ClassUtils.getShortName(task.getTaskClassName());
+            String beanName = Introspector.decapitalize(shortClassName);
+            scheduleClusterTask = (ScheduleClusterTask) applicationContext.getBean(beanName);
         }
 
         @Override

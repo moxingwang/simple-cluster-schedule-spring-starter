@@ -10,10 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -56,10 +53,10 @@ public class RedisCircularizeStrategy {
                         //清除这台机器并且收回所有任务
 
                         //todo 添加事务
-                        Set<String> tasks = redisTemplate.opsForSet().members(RedisKey.TASKS_OWNER + machine);
+                        Set<Task> tasks = redisTemplate.opsForSet().members(RedisKey.TASKS_OWNER + machine);
                         if (!CollectionUtils.isEmpty(tasks)) {
-                            for (String task : tasks) {
-                                redisTemplate.opsForSet().add(RedisKey.TASKS, JSON.toJSONString(task));
+                            for (Task task : tasks) {
+                                redisTemplate.opsForSet().add(RedisKey.TASKS, task);
                             }
                         }
 
@@ -98,12 +95,18 @@ public class RedisCircularizeStrategy {
         for (Map.Entry<String, Long> entry : arrange.entrySet()) {
             totalUnExeTaskSize = redisTemplate.opsForSet().size(RedisKey.TASKS);
             if (entry.getValue() < 50 && totalUnExeTaskSize > 0) {
+                List<Task> tasks = new ArrayList<>();
                 for (int i = 0; i < 50; i++) {
-                    redisTemplate.opsForSet().add(RedisKey.TASKS_OWNER + entry.getKey(), redisTemplate.opsForSet().pop(RedisKey.TASKS));
+                    Task task = (Task) redisTemplate.opsForSet().pop(RedisKey.TASKS);
+                    redisTemplate.opsForSet().add(RedisKey.TASKS_OWNER + entry.getKey(), task);
+                    tasks.add(task);
                 }
 
                 MessageEvent messageEvent = new MessageEvent();
+                messageEvent.setFormId(MACHINE_ID);
+                messageEvent.setToId(entry.getKey());
                 messageEvent.setType(MessageType.NEW_TASK_EVENT.getValue());
+                messageEvent.setTasks(tasks);
                 sendBroadcast(messageEvent);
             }
         }
