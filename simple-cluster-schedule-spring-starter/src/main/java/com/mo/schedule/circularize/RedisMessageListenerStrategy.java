@@ -1,6 +1,5 @@
 package com.mo.schedule.circularize;
 
-import com.alibaba.fastjson.JSON;
 import com.mo.schedule.entity.MessageEvent;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -14,7 +13,7 @@ public class RedisMessageListenerStrategy implements MessageListener {
     private RedisTemplate redisTemplate;
     private RedisCircularizeStrategy redisCircularizeStrategy;
 
-    public RedisMessageListenerStrategy(RedisTemplate redisTemplate,RedisCircularizeStrategy redisCircularizeStrategy) {
+    public RedisMessageListenerStrategy(RedisTemplate redisTemplate, RedisCircularizeStrategy redisCircularizeStrategy) {
         this.redisTemplate = redisTemplate;
         this.redisCircularizeStrategy = redisCircularizeStrategy;
     }
@@ -22,9 +21,6 @@ public class RedisMessageListenerStrategy implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] bytes) {
         MessageEvent messageEvent = (MessageEvent) redisTemplate.getValueSerializer().deserialize(message.getBody());
-
-        //添加任务通知
-
-        System.out.println(JSON.toJSONString(messageEvent));
+        redisCircularizeStrategy.onMessage(messageEvent);
     }
 }

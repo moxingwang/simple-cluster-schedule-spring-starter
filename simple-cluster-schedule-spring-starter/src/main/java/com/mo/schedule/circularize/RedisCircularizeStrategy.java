@@ -130,5 +130,8 @@ public class RedisCircularizeStrategy {
         return MACHINE_ID.equals(leaderID);
     }
 
+    public void onMessage(MessageEvent messageEvent) {
+
+    }
 
 }
