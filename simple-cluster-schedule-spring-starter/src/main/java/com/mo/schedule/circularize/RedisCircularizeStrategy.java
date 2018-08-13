@@ -119,8 +119,9 @@ public class RedisCircularizeStrategy {
     //启动后发送应用注册通知
     public RedisCircularizeStrategy(RedisTemplate redisTemplate, TaskContainer taskContainer) {
         this.redisTemplate = redisTemplate;
-        redisTemplate.opsForSet().add(RedisKey.REGISTRY_MACHINE_LIST, MACHINE_ID);
+        this.taskContainer = taskContainer;
 
+        redisTemplate.opsForSet().add(RedisKey.REGISTRY_MACHINE_LIST, MACHINE_ID);
 
         //key永久存储
         redisTemplate.expire(RedisKey.REGISTRY_MACHINE_LIST, Integer.MAX_VALUE, TimeUnit.DAYS);
@@ -131,7 +132,10 @@ public class RedisCircularizeStrategy {
     }
 
     public void onMessage(MessageEvent messageEvent) {
+        if(MessageType.NEW_TASK_EVENT.getValue() == messageEvent.getType()){
+            //对比本地任务和远程任务
 
+        }
     }
 
 }

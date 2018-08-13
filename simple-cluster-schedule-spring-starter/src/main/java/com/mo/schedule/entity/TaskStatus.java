@@ -6,8 +6,10 @@ package com.mo.schedule.entity;
  **/
 public enum TaskStatus {
 
-    UNEXECUTED(0),
-    EXECUTING(1);
+    UNEXECUTED(0),//远程
+    EXECUTING(1)//本地
+
+    ;
 
     private int value;
 

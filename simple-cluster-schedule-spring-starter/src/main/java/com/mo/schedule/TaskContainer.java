@@ -39,11 +39,6 @@ public class TaskContainer {
         }
     }
 
-    protected void startTask(Task task) {
-        task.setTaskStatus(TaskStatus.EXECUTING.getValue());
-        redisTemplate.opsForSet().add(RedisKey.TASKS_OWNER + MACHINE_ID, task);
-    }
-
     protected void finishTask(Task task) {
         redisTemplate.opsForSet().remove(RedisKey.TASKS_OWNER + MACHINE_ID, task);
     }
@@ -59,7 +54,6 @@ public class TaskContainer {
 
         @Override
         public void run() {
-            startTask(task);
             scheduleClusterTask.start(task);
             finishTask(task);
         }
