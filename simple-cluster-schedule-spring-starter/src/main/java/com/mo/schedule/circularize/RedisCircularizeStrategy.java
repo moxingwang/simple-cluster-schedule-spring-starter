@@ -51,27 +51,29 @@ public class RedisCircularizeStrategy {
 
             //检查machines的心跳
             for (String machine : machines) {
-                Object machineObj = redisTemplate.opsForValue().get(RedisKey.FOLLOWER + machine);
-                if (null == machineObj) {
-                    //清除这台机器并且收回所有任务
+                if (!MACHINE_ID.equals(machine)) {
+                    Object machineObj = redisTemplate.opsForValue().get(RedisKey.FOLLOWER + machine);
+                    if (null == machineObj) {
+                        //清除这台机器并且收回所有任务
 
-                    //todo 添加事务
-                    Set<String> tasks = redisTemplate.opsForSet().members(RedisKey.TASKS_OWNER + machine);
-                    if (!CollectionUtils.isEmpty(tasks)) {
-                        for (String task : tasks) {
-                            redisTemplate.opsForSet().add(RedisKey.TASKS, JSON.toJSONString(task));
+                        //todo 添加事务
+                        Set<String> tasks = redisTemplate.opsForSet().members(RedisKey.TASKS_OWNER + machine);
+                        if (!CollectionUtils.isEmpty(tasks)) {
+                            for (String task : tasks) {
+                                redisTemplate.opsForSet().add(RedisKey.TASKS, JSON.toJSONString(task));
+                            }
                         }
-                    }
 
-                    machines.remove(machine);
-                    redisTemplate.opsForSet().remove(RedisKey.REGISTRY_MACHINE_LIST, machine);
+                        machines.remove(machine);
+                        redisTemplate.opsForSet().remove(RedisKey.REGISTRY_MACHINE_LIST, machine);
+                    }
                 }
             }
 
             Map<String, Long> arrange = new HashMap<>();
 
             for (String machine : machines) {
-                arrange.put(machine, redisTemplate.opsForSet().size(RedisKey.REGISTRY_MACHINE_LIST));
+                arrange.put(machine, redisTemplate.opsForSet().size(RedisKey.TASKS_OWNER + machine));
             }
 
             arrangeTasks(arrange);
