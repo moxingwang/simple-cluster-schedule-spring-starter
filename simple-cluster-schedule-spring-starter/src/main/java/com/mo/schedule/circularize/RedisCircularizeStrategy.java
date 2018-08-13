@@ -71,9 +71,7 @@ public class RedisCircularizeStrategy {
                 arrange.put(machine, redisTemplate.opsForSet().size(RedisKey.REGISTRY_MACHINE_LIST));
             }
 
-            //todo 划分任务{均分任务，以及加入新的任务}
-
-
+            arrangeTasks(arrange);
         } else {
             //检测leader的存在性
             Object leader = redisTemplate.opsForValue().get(RedisKey.LEADER);
@@ -85,6 +83,13 @@ public class RedisCircularizeStrategy {
                     leaderID = MACHINE_ID;
                 }
             }
+        }
+    }
+
+    //todo 划分任务{均分任务，以及加入新的任务}
+    private void arrangeTasks(Map<String, Long> arrange) {
+        for (Map.Entry<String, Long> stringLongEntry : arrange.entrySet()) {
+
         }
     }
 
