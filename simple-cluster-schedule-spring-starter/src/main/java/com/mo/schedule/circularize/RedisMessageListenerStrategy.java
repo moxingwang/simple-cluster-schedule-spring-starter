@@ -21,6 +21,10 @@ public class RedisMessageListenerStrategy implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] bytes) {
         MessageEvent messageEvent = (MessageEvent) redisTemplate.getValueSerializer().deserialize(message.getBody());
-        redisCircularizeStrategy.onMessage(messageEvent);
+
+        //只处理自己的广播
+        if (RedisCircularizeStrategy.MACHINE_ID.equals(messageEvent.getToId())) {
+            redisCircularizeStrategy.onMessage(messageEvent);
+        }
     }
 }

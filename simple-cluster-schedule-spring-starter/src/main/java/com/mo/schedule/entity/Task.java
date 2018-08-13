@@ -9,18 +9,9 @@ import java.util.Objects;
  **/
 public class Task implements Serializable {
     private String taskId;//指定uuid
-    private int taskStatus=0;
     private String taskName;
     private String taskGroupName;
     private String taskClassName;
-
-    public int getTaskStatus() {
-        return taskStatus;
-    }
-
-    public void setTaskStatus(int taskStatus) {
-        this.taskStatus = taskStatus;
-    }
 
     public String getTaskId() {
         return taskId;

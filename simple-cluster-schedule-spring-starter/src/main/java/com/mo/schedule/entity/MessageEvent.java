@@ -1,6 +1,7 @@
 package com.mo.schedule.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @description:
@@ -8,14 +9,33 @@ import java.io.Serializable;
  **/
 public class MessageEvent implements Serializable {
     private int type;
-    private String formIp;
+    private String formId;
+    private String toId;
+    private List<Task> tasks;
 
-    public String getFormIp() {
-        return formIp;
+
+    public List<Task> getTasks() {
+        return tasks;
     }
 
-    public void setFormIp(String formIp) {
-        this.formIp = formIp;
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public String getFormId() {
+        return formId;
+    }
+
+    public void setFormId(String formId) {
+        this.formId = formId;
+    }
+
+    public String getToId() {
+        return toId;
+    }
+
+    public void setToId(String toId) {
+        this.toId = toId;
     }
 
     public int getType() {

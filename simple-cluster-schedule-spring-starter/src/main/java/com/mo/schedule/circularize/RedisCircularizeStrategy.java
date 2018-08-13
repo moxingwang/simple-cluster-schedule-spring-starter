@@ -5,6 +5,7 @@ import com.mo.schedule.TaskContainer;
 import com.mo.schedule.entity.MessageEvent;
 import com.mo.schedule.entity.MessageType;
 import com.mo.schedule.entity.RedisKey;
+import com.mo.schedule.entity.Task;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
@@ -25,8 +26,6 @@ public class RedisCircularizeStrategy {
 
     private RedisTemplate redisTemplate;
     private TaskContainer taskContainer;
-
-    public static final int MESSAGE_TYPE_TASK_PUSH = 0;
 
     /**
      * 本地leader缓存
@@ -132,9 +131,11 @@ public class RedisCircularizeStrategy {
     }
 
     public void onMessage(MessageEvent messageEvent) {
-        if(MessageType.NEW_TASK_EVENT.getValue() == messageEvent.getType()){
+        if (MessageType.NEW_TASK_EVENT.getValue() == messageEvent.getType() && !CollectionUtils.isEmpty(messageEvent.getTasks())) {
             //对比本地任务和远程任务
-
+            for (Task task : messageEvent.getTasks()) {
+                taskContainer.acceptNewTask(task);
+            }
         }
     }
 
