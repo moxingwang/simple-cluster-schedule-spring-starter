@@ -47,7 +47,7 @@ public class SimpleScheduleClusterAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(SimpleScheduleClusterPublisher.class)
     public SimpleScheduleClusterPublisher defaultSimpleScheduleClusterPublisher(RedisTemplate redisTemplate) {
-        SimpleScheduleClusterPublisher simpleScheduleClusterPublisher = new SimpleScheduleClusterPublisher(redisTemplate);
+        SimpleScheduleClusterPublisher simpleScheduleClusterPublisher = new SimpleScheduleClusterPublisher(redisTemplate,scheduleClusterProperties.getPackageName());
         return simpleScheduleClusterPublisher;
     }
 }

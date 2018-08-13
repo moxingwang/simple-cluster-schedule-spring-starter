@@ -11,6 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "simple.schedule.cluster")
 public class ScheduleClusterProperties implements BeanClassLoaderAware, InitializingBean {
+    private String packageName = "com";
 
     private Integer taskCount = 10;
 
@@ -20,6 +21,14 @@ public class ScheduleClusterProperties implements BeanClassLoaderAware, Initiali
 
     public void setTaskCount(Integer taskCount) {
         this.taskCount = taskCount;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
     }
 
     public void setBeanClassLoader(ClassLoader classLoader) {
