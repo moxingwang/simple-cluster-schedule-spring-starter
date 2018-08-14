@@ -46,7 +46,7 @@ public class RedisCircularizeStrategy {
             Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
 
             //检查machines的心跳
-            Set<String> realMachines = new HashSet<>();
+            Set<String> realMachines = new HashSet<>(machines);
             for (String machine : machines) {
                 if (!MACHINE_ID.equals(machine)) {
                     Object machineObj = redisTemplate.opsForValue().get(RedisKey.FOLLOWER + machine);
@@ -61,9 +61,9 @@ public class RedisCircularizeStrategy {
                             }
                         }
 
+                        realMachines.remove(machine);
                         redisTemplate.opsForSet().remove(RedisKey.REGISTRY_MACHINE_LIST, machine);
                     }else {
-                        realMachines.add(machine);
                     }
                 }
             }
