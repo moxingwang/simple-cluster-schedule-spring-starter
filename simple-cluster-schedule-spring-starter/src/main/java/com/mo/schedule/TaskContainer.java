@@ -38,6 +38,7 @@ public class TaskContainer {
     }
 
     protected void finishTask(Task task) {
+        System.out.println("任务执行完成"+JSON.toJSONString(task));
         redisTemplate.opsForSet().remove(RedisKey.TASKS_OWNER + MACHINE_ID, task);
     }
 
