@@ -118,8 +118,13 @@ public class RedisCircularizeStrategy {
                     sendBroadcast(messageEvent);
                 }
             } else {
-                //检查本地任务
-
+                //检查本地任务并且同步
+                if (redisTemplate.opsForSet().size(RedisKey.TASKS_OWNER + entry.getKey()) - taskContainer.localTaskCount() > 25) {
+                    Set<Task> tasks = redisTemplate.opsForSet().members(RedisKey.TASKS_OWNER + entry.getKey());
+                    for (Task task : tasks) {
+                        taskContainer.acceptNewTask(task);
+                    }
+                }
             }
         }
     }
