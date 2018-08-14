@@ -130,7 +130,7 @@ public class RedisCircularizeStrategy {
         this.redisTemplate = redisTemplate;
         this.taskContainer = taskContainer;
 
-        redisTemplate.opsForValue().set(RedisKey.FOLLOWER + MACHINE_ID, "1", 5, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(RedisKey.FOLLOWER + MACHINE_ID, "1", 10, TimeUnit.SECONDS);
         redisTemplate.opsForSet().add(RedisKey.REGISTRY_MACHINE_LIST, MACHINE_ID);
         //key永久存储
         redisTemplate.expire(RedisKey.REGISTRY_MACHINE_LIST, Integer.MAX_VALUE, TimeUnit.DAYS);
