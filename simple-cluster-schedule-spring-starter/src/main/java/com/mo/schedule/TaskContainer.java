@@ -33,9 +33,10 @@ public class TaskContainer {
 
     //收到新任务
     public void acceptNewTask(Task task) {
-        if (null == tasks.put(task.getTaskId(), task)) {
+        if(null != tasks.get(task.getTaskId())){
             return;
         }
+        tasks.put(task.getTaskId(), task);
         threadPool.execute(new TaskThread(task));
     }
 

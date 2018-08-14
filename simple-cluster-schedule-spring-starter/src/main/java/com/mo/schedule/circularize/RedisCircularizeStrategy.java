@@ -119,7 +119,10 @@ public class RedisCircularizeStrategy {
                 }
             } else {
                 //检查本地任务并且同步
-                if (redisTemplate.opsForSet().size(RedisKey.TASKS_OWNER + entry.getKey()) - taskContainer.localTaskCount() > 25) {
+                Long redisTaskCount = redisTemplate.opsForSet().size(RedisKey.TASKS_OWNER + entry.getKey());
+                int localTaskCount = taskContainer.localTaskCount();
+                System.out.println("远程任务" + redisTaskCount + "本地" + localTaskCount);
+                if (redisTaskCount - localTaskCount > 25) {
                     Set<Task> tasks = redisTemplate.opsForSet().members(RedisKey.TASKS_OWNER + entry.getKey());
                     for (Task task : tasks) {
                         taskContainer.acceptNewTask(task);
