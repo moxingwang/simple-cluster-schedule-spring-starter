@@ -99,9 +99,9 @@ public class RedisCircularizeStrategy {
             if (totalUnExeTaskSize < 0) {
                 return;
             }
-            if (entry.getValue() < 50) {
+            if (entry.getValue() < 300) {
                 List<Task> tasks = new ArrayList<>();
-                for (int i = 0; i < 50; i++) {
+                for (int i = 0; i < 300; i++) {
                     Task task = (Task) redisTemplate.opsForSet().pop(RedisKey.TASKS);
                     if (null == task) {
                         break;
@@ -122,7 +122,7 @@ public class RedisCircularizeStrategy {
                 Long redisTaskCount = redisTemplate.opsForSet().size(RedisKey.TASKS_OWNER + entry.getKey());
                 int localTaskCount = taskContainer.localTaskCount();
                 System.out.println("远程任务" + redisTaskCount + "本地" + localTaskCount);
-                if (redisTaskCount - localTaskCount > 25) {
+                if (redisTaskCount - localTaskCount > 50) {
                     Set<Task> tasks = redisTemplate.opsForSet().members(RedisKey.TASKS_OWNER + entry.getKey());
                     for (Task task : tasks) {
                         taskContainer.acceptNewTask(task);
