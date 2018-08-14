@@ -26,7 +26,9 @@ public class IndexController {
         task.setTaskId(UUID.randomUUID().toString());
 
 //        task.setTaskClassName(CommonTask.);
-        simpleScheduleClusterPublisher.publishTask(Arrays.asList(task));
+        for (int i = 0; i < 200; i++) {
+            simpleScheduleClusterPublisher.publishTask(Arrays.asList(task));
+        }
         return "OK";
     }
 }

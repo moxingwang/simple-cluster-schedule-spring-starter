@@ -1,6 +1,5 @@
 package com.mo.schedule.circularize;
 
-import com.alibaba.fastjson.JSON;
 import com.mo.schedule.TaskContainer;
 import com.mo.schedule.entity.MessageEvent;
 import com.mo.schedule.entity.MessageType;
@@ -63,7 +62,6 @@ public class RedisCircularizeStrategy {
 
                         realMachines.remove(machine);
                         redisTemplate.opsForSet().remove(RedisKey.REGISTRY_MACHINE_LIST, machine);
-                    }else {
                     }
                 }
             }
@@ -100,14 +98,14 @@ public class RedisCircularizeStrategy {
                 List<Task> tasks = new ArrayList<>();
                 for (int i = 0; i < 50; i++) {
                     Task task = (Task) redisTemplate.opsForSet().pop(RedisKey.TASKS);
-                    if(null == task){
+                    if (null == task) {
                         break;
                     }
                     redisTemplate.opsForSet().add(RedisKey.TASKS_OWNER + entry.getKey(), task);
                     tasks.add(task);
                 }
 
-                if(!tasks.isEmpty()){
+                if (!tasks.isEmpty()) {
                     MessageEvent messageEvent = new MessageEvent();
                     messageEvent.setFormId(MACHINE_ID);
                     messageEvent.setToId(entry.getKey());
@@ -143,7 +141,7 @@ public class RedisCircularizeStrategy {
     public void onMessage(MessageEvent messageEvent) {
         if (MessageType.NEW_TASK_EVENT.getValue() == messageEvent.getType() && !CollectionUtils.isEmpty(messageEvent.getTasks())) {
             for (Task task : messageEvent.getTasks()) {
-                if(null == task){
+                if (null == task) {
                     continue;
                 }
                 taskContainer.acceptNewTask(task);
