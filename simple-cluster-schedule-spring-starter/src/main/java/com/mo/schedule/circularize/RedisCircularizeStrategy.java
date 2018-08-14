@@ -32,6 +32,18 @@ public class RedisCircularizeStrategy {
     //定时向leader发送消息，收到leader的回复广播验证本地leader
 
 
+    @Scheduled(fixedRate = 10000)
+    public void pollingTask() {
+        if (taskContainer.isTerminated()) {
+            Long taskSize = redisTemplate.opsForSet().size(RedisKey.TASKS_OWNER + MACHINE_ID);
+            if (taskSize > 0) {
+                for (int i = 0; i < taskSize; i++) {
+                    taskContainer.acceptNewTask((Task) redisTemplate.opsForSet().pop(RedisKey.TASKS_OWNER + MACHINE_ID));
+                }
+            }
+        }
+    }
+
     @Scheduled(fixedRate = 3000)
     public void leaderHeartbeat() {
         //心跳维持

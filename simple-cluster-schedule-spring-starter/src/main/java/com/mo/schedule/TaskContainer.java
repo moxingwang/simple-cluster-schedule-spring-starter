@@ -60,4 +60,8 @@ public class TaskContainer {
             finishTask(task);
         }
     }
+
+    public boolean isTerminated(){
+        return threadPool.isTerminated();
+    }
 }
