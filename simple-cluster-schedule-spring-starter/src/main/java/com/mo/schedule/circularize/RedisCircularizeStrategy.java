@@ -44,7 +44,7 @@ public class RedisCircularizeStrategy {
         if (isLeader()) {
             //编排任务; 检查follower心跳
             Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
-            System.out.println("机器数量"+JSON.toJSONString(machines));
+            System.out.println("机器数量" + JSON.toJSONString(machines));
 
             //检查machines的心跳
             Set<String> realMachines = new HashSet<>(machines);
@@ -130,8 +130,8 @@ public class RedisCircularizeStrategy {
         this.redisTemplate = redisTemplate;
         this.taskContainer = taskContainer;
 
+        redisTemplate.opsForValue().set(RedisKey.FOLLOWER + MACHINE_ID, "1", 5, TimeUnit.SECONDS);
         redisTemplate.opsForSet().add(RedisKey.REGISTRY_MACHINE_LIST, MACHINE_ID);
-
         //key永久存储
         redisTemplate.expire(RedisKey.REGISTRY_MACHINE_LIST, Integer.MAX_VALUE, TimeUnit.DAYS);
     }
