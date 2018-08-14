@@ -25,6 +25,7 @@ public class TaskContainer {
     private static final Map<String, Task> tasks = new ConcurrentHashMap<String, Task>();
 
     public TaskContainer(RedisTemplate redisTemplate, ApplicationContext applicationContext) {
+        this.redisTemplate = redisTemplate;
         this.applicationContext = applicationContext;
         this.unExeTaskQueue = new ArrayBlockingQueue(1000);
         this.threadPool = new ThreadPoolExecutor(5, 10, 30, TimeUnit.MINUTES, unExeTaskQueue);
