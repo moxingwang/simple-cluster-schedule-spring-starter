@@ -9,7 +9,6 @@ import java.util.List;
  **/
 public class MessageEvent implements Serializable {
     private int type;
-    private String formId;
     private String toId;
     private List<Task> tasks;
 
@@ -20,14 +19,6 @@ public class MessageEvent implements Serializable {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
-    }
-
-    public String getFormId() {
-        return formId;
-    }
-
-    public void setFormId(String formId) {
-        this.formId = formId;
     }
 
     public String getToId() {

@@ -32,18 +32,6 @@ public class RedisCircularizeStrategy {
     //定时向leader发送消息，收到leader的回复广播验证本地leader
 
 
-    @Scheduled(fixedRate = 10000)
-    public void pollingTask() {
-        if (taskContainer.isTerminated()) {
-            Long taskSize = redisTemplate.opsForSet().size(RedisKey.TASKS_OWNER + MACHINE_ID);
-            if (taskSize > 0) {
-                for (int i = 0; i < taskSize; i++) {
-                    taskContainer.acceptNewTask((Task) redisTemplate.opsForSet().pop(RedisKey.TASKS_OWNER + MACHINE_ID));
-                }
-            }
-        }
-    }
-
     @Scheduled(fixedRate = 3000)
     public void leaderHeartbeat() {
         //心跳维持
@@ -108,7 +96,10 @@ public class RedisCircularizeStrategy {
         }
         for (Map.Entry<String, Long> entry : arrange.entrySet()) {
             totalUnExeTaskSize = redisTemplate.opsForSet().size(RedisKey.TASKS);
-            if (entry.getValue() < 50 && totalUnExeTaskSize > 0) {
+            if (totalUnExeTaskSize < 0) {
+                return;
+            }
+            if (entry.getValue() < 50) {
                 List<Task> tasks = new ArrayList<>();
                 for (int i = 0; i < 50; i++) {
                     Task task = (Task) redisTemplate.opsForSet().pop(RedisKey.TASKS);
@@ -121,12 +112,14 @@ public class RedisCircularizeStrategy {
 
                 if (!tasks.isEmpty()) {
                     MessageEvent messageEvent = new MessageEvent();
-                    messageEvent.setFormId(MACHINE_ID);
                     messageEvent.setToId(entry.getKey());
                     messageEvent.setType(MessageType.NEW_TASK_EVENT.getValue());
                     messageEvent.setTasks(tasks);
                     sendBroadcast(messageEvent);
                 }
+            } else {
+                //检查本地任务
+
             }
         }
     }
