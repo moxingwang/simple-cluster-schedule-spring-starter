@@ -36,7 +36,7 @@ public class TaskContainer {
         if (null == tasks.put(task.getTaskId(), task)) {
             return;
         }
-        threadPool.submit(new TaskThread(task));
+        threadPool.execute(new TaskThread(task));
     }
 
     protected void finishTask(Task task) {
