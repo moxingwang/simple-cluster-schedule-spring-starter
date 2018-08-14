@@ -8,7 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.ClassUtils;
 
 import java.beans.Introspector;
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.*;
 
 import static com.mo.schedule.circularize.RedisCircularizeStrategy.MACHINE_ID;
@@ -22,7 +22,7 @@ public class TaskContainer {
     private ApplicationContext applicationContext;
     private ArrayBlockingQueue unExeTaskQueue;
     private ExecutorService threadPool;
-    private static final Set<Task> tasks = new ConcurrentSkipListSet<Task>();
+    private static final Map<String, Task> tasks = new ConcurrentHashMap<String, Task>();
 
     public TaskContainer(RedisTemplate redisTemplate, ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -33,9 +33,7 @@ public class TaskContainer {
 
     //收到新任务
     public void acceptNewTask(Task task) {
-
-        boolean flag = tasks.add(task);
-        if(!flag){
+        if (null == tasks.put(task.getTaskId(), task)) {
             return;
         }
         threadPool.submit(new TaskThread(task));
@@ -44,7 +42,7 @@ public class TaskContainer {
     protected void finishTask(Task task) {
         System.out.println("任务执行完成" + JSON.toJSONString(task));
         redisTemplate.opsForSet().remove(RedisKey.TASKS_OWNER + MACHINE_ID, task);
-        tasks.remove(task);
+        tasks.remove(task.getTaskId());
     }
 
     public class TaskThread implements Runnable {
