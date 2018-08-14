@@ -61,7 +61,6 @@ public class RedisCircularizeStrategy {
                             }
                         }
 
-                        machines.remove(machine);
                         redisTemplate.opsForSet().remove(RedisKey.REGISTRY_MACHINE_LIST, machine);
                     }else {
                         realMachines.add(machine);
