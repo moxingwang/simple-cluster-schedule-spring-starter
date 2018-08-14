@@ -28,7 +28,6 @@ public class IndexController {
     @GetMapping("/test")
     public String test() throws ClassNotFoundException {
         Task task = new Task();
-        task.setTaskId(UUID.randomUUID().toString());
 
 
 /*        redisTemplate.opsForSet().add(RedisKey.REGISTRY_MACHINE_LIST+1, "1111111");
@@ -46,6 +45,7 @@ public class IndexController {
 
 //        task.setTaskClassName(CommonTask.);
         for (int i = 0; i < 200; i++) {
+            task.setTaskId(UUID.randomUUID().toString());
             simpleScheduleClusterPublisher.publishTask(Arrays.asList(task));
         }
         return "OK";
