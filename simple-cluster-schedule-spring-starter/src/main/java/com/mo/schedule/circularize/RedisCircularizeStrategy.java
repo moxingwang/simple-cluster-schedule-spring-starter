@@ -58,6 +58,8 @@ public class RedisCircularizeStrategy {
                 }
             }
         } else {
+            redisTemplate.opsForSet().add(RedisKey.REGISTRY_MACHINE_LIST, MACHINE_ID);
+
             //检测leader的存在性
             Object leader = redisTemplate.opsForValue().get(RedisKey.LEADER);
             if (leader == null) {
