@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.mo</groupId>
-    <artifactId>lottery-task</artifactId>
+    <artifactId>simple-cluster-schedule-spring-starter-test</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>lottery-task</name>
+    <name>simple-cluster-schedule-spring-starter-test</name>
     <description>Demo project for Spring Boot</description>
 
     <parent>

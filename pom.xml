@@ -12,8 +12,8 @@
     <description>Demo project for Spring Boot</description>
 
     <modules>
-        <module>lottery-task</module>
         <module>simple-cluster-schedule-spring-starter</module>
+        <module>simple-cluster-schedule-spring-starter-test</module>
     </modules>
 
 
