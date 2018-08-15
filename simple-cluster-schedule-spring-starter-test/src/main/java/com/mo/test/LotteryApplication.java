@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableSimpleScheduleCluster
-@Import({RedisConfiguration.class,ScheduledExecutorServiceConfiguration.class})
+@Import({RedisConfiguration.class, ScheduledExecutorServiceConfiguration.class})
 public class LotteryApplication {
 
     public static void main(String[] args) {
