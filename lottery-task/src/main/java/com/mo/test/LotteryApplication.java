@@ -1,4 +1,4 @@
-package com.mo.lottery;
+package com.mo.test;
 
 import com.mo.schedule.annotation.EnableSimpleScheduleCluster;
 import com.mo.schedule.config.RedisConfiguration;

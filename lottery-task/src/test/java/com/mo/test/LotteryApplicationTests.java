@@ -1,4 +1,4 @@
-package com.mo.lottery;
+package com.mo.test;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

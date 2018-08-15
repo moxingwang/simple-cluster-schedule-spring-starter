@@ -1,4 +1,4 @@
-package com.mo.lottery.task;
+package com.mo.test.task;
 
 import com.mo.schedule.ScheduleClusterTask;
 import com.mo.schedule.circularize.RedisCircularizeStrategy;

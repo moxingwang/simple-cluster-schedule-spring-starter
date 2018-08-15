@@ -1,4 +1,4 @@
-package com.mo.lottery.task;
+package com.mo.test.task;
 
 import com.mo.schedule.ScheduleClusterTask;
 import com.mo.schedule.circularize.RedisCircularizeStrategy;
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
  * @author: MoXingwang 2018-08-11 20:49
  **/
 @Component
-public class CommonTask implements ScheduleClusterTask {
+public class DataTask implements ScheduleClusterTask {
     private static final Logger logger = LoggerFactory.getLogger(RedisCircularizeStrategy.class);
 
     @Override
     public void start(Task task) {
-        logger.info("CommonTask开始调度");
+        logger.info("DataTask开始调度");
     }
 }
