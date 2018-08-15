@@ -156,7 +156,7 @@ public class RedisCircularizeStrategy {
         redisTemplate.opsForValue().set(RedisKey.FOLLOWER + MACHINE_ID, "1", 10, TimeUnit.SECONDS);
         redisTemplate.opsForSet().add(RedisKey.REGISTRY_MACHINE_LIST, MACHINE_ID);
         redisTemplate.expire(RedisKey.REGISTRY_MACHINE_LIST, 30, TimeUnit.DAYS);
-        redisTemplate.expire(RedisKey.TASKS_OWNER + MACHINE_ID, 10, TimeUnit.DAYS);
+        redisTemplate.expire(RedisKey.TASKS_OWNER + MACHINE_ID, 1, TimeUnit.DAYS);
     }
 
     public boolean isLeader() {
