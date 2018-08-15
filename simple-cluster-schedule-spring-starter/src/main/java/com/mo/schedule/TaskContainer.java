@@ -1,8 +1,9 @@
 package com.mo.schedule;
 
-import com.alibaba.fastjson.JSON;
 import com.mo.schedule.entity.RedisKey;
 import com.mo.schedule.entity.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.ClassUtils;
@@ -18,6 +19,8 @@ import static com.mo.schedule.circularize.RedisCircularizeStrategy.MACHINE_ID;
  * @author: MoXingwang 2018-08-11 19:08
  **/
 public class TaskContainer {
+    private static final Logger logger = LoggerFactory.getLogger(TaskContainer.class);
+
     private RedisTemplate redisTemplate;
     private ApplicationContext applicationContext;
     private ArrayBlockingQueue unExeTaskQueue;
@@ -34,7 +37,7 @@ public class TaskContainer {
 
     //收到新任务
     public void acceptNewTask(Task task) {
-        if(null != tasks.get(task.getTaskId())){
+        if (null != tasks.get(task.getTaskId())) {
             return;
         }
         tasks.put(task.getTaskId(), task);
@@ -42,7 +45,6 @@ public class TaskContainer {
     }
 
     protected void finishTask(Task task) {
-        System.out.println("任务执行完成" + JSON.toJSONString(task));
         redisTemplate.opsForSet().remove(RedisKey.TASKS_OWNER + MACHINE_ID, task);
         tasks.remove(task.getTaskId());
     }
@@ -53,8 +55,6 @@ public class TaskContainer {
 
         public TaskThread(Task task) {
             this.task = task;
-            System.out.println("执行任务" + JSON.toJSONString(task));
-
             String shortClassName = ClassUtils.getShortName(task.getTaskClassName());
             String beanName = Introspector.decapitalize(shortClassName);
             scheduleClusterTask = (ScheduleClusterTask) applicationContext.getBean(beanName);

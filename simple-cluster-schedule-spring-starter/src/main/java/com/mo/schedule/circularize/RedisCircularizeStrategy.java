@@ -48,7 +48,7 @@ public class RedisCircularizeStrategy {
         if (isLeader()) {
             //编排任务; 检查follower心跳
             Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
-            logger.info("机器数量{}" , JSON.toJSONString(machines));
+            logger.info("机器数量{}", JSON.toJSONString(machines));
 
             //检查machines的心跳
             for (String machine : machines) {
@@ -122,7 +122,9 @@ public class RedisCircularizeStrategy {
                 //检查本地任务并且同步
                 Long redisTaskCount = redisTemplate.opsForSet().size(RedisKey.TASKS_OWNER + entry.getKey());
                 int localTaskCount = taskContainer.localTaskCount();
-                System.out.println("远程任务" + redisTaskCount + "本地" + localTaskCount);
+
+                logger.info("远程任务{}本地{}", redisTaskCount, localTaskCount);
+
                 if (redisTaskCount - localTaskCount > 50) {
                     Set<Task> tasks = redisTemplate.opsForSet().members(RedisKey.TASKS_OWNER + entry.getKey());
                     for (Task task : tasks) {
