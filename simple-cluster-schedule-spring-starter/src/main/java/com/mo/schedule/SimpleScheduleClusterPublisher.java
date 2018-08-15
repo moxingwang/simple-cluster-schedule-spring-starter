@@ -25,16 +25,6 @@ public class SimpleScheduleClusterPublisher {
         this.packageName = packageName;
     }
 
-    /**
-     * 发布任务
-     *
-     * @param tasks
-     */
-    public void publishTask(List<Task> tasks) {
-        for (String s : listSubServiceClass(packageName)) {
-            publishTask(tasks, s);
-        }
-    }
 
     /**
      * 发布任务
@@ -45,13 +35,18 @@ public class SimpleScheduleClusterPublisher {
     public void publishTask(List<Task> tasks, String className) {
         for (Task task : tasks) {
             task.setTaskClassName(className);
-            task.setTaskName("name");
             redisTemplate.opsForSet().add(RedisKey.TASKS, task);
         }
     }
 
 
-    private Set<String> listSubServiceClass(String packageName) {
+    /**
+     * 获取所有子类
+     *
+     * @param packageName
+     * @return
+     */
+    public Set<String> listSubServiceClass(String packageName) {
         Set<String> allClasses = null;
         if ((allClasses = classContainer.get(packageName)) != null) {
             return allClasses;
