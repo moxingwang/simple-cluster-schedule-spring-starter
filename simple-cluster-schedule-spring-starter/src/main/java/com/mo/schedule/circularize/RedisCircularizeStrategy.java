@@ -33,6 +33,9 @@ public class RedisCircularizeStrategy {
      */
     private String leaderID = null;
 
+    /**
+     * 心跳
+     */
     @Scheduled(fixedRate = 5000)
     public void leaderHeartbeat() {
         //心跳维持
@@ -75,7 +78,7 @@ public class RedisCircularizeStrategy {
     }
 
     /**
-     * 编排任务;
+     * 编排任务
      */
     @Scheduled(fixedRate = 5000)
     public void taskPolling() {
