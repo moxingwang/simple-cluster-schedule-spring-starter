@@ -48,7 +48,6 @@ public class RedisCircularizeStrategy {
         if (isLeader()) {
             //编排任务; 检查follower心跳
             Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
-            logger.info("机器数量{}", machines.size());
 
             //检查machines的心跳
             for (String machine : machines) {
