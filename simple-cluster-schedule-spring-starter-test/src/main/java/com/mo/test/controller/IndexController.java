@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @description:
@@ -31,6 +32,7 @@ public class IndexController {
             List<Task> tasks = new ArrayList<>();
             for (int i = 0; i < 200; i++) {
                 Task task = new Task();
+                task.setTaskId(UUID.randomUUID().toString());
                 task.setTaskName(CommonTask.class.getName());
                 tasks.add(task);
             }
@@ -40,6 +42,7 @@ public class IndexController {
             List<Task> tasks = new ArrayList<>();
             for (int i = 0; i < 200; i++) {
                 Task task = new Task();
+                task.setTaskId(UUID.randomUUID().toString());
                 task.setTaskName(DataTask.class.getName());
                 tasks.add(task);
             }
