@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
  **/
 @EnableScheduleClusterTask
 @Component
-public class CommonTask implements ScheduleClusterTask {
+public class DataTask implements ScheduleClusterTask {
     private static final Logger logger = LoggerFactory.getLogger(RedisCircularizeStrategy.class);
 
     @Override
     public void start(Task task) {
-        logger.info("CommonTask开始调度");
+        logger.info("DataTask开始调度");
     }
 }
