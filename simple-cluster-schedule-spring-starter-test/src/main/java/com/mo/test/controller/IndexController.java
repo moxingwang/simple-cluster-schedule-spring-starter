@@ -29,7 +29,7 @@ public class IndexController {
         List<Task> tasks = new ArrayList<>();
         for (int i = 0; i < 200; i++) {
             Task task = new Task();
-            task.setTaskId(UUID.randomUUID().toString());
+            task.setTaskId(UUID.randomUUID().toString() + i);
             tasks.add(task);
         }
         simpleScheduleClusterPublisher.publishTask(tasks);
