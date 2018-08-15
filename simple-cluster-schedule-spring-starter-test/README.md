@@ -1,2 +1,3 @@
-http://localhost:8080/lottery/index/test
+* push task
 
+    http://localhost:8080/test/index/push
