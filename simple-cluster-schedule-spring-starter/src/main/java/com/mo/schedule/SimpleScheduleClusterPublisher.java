@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,7 +35,11 @@ public class SimpleScheduleClusterPublisher {
      */
     public void publishTask(List<Task> tasks, String className) {
         for (Task task : tasks) {
+            Objects.requireNonNull(task.getTaskId(), "taskId can't be null");
             task.setTaskClassName(className);
+        }
+
+        for (Task task : tasks) {
             redisTemplate.opsForSet().add(RedisKey.TASKS, task);
         }
     }
