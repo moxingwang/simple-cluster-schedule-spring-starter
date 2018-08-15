@@ -97,7 +97,7 @@ public class RedisCircularizeStrategy {
 
     private void arrangeTasks(Map<String, Long> arrange) {
         Long totalUnExeTaskSize = redisTemplate.opsForSet().size(RedisKey.TASKS);
-        logger.info("总任务数量{}机器对应{}", totalUnExeTaskSize, JSON.toJSONString(arrange));
+        logger.info("总任务数量{};机器{}", totalUnExeTaskSize, JSON.toJSONString(arrange));
         if (totalUnExeTaskSize <= 0) {
             return;
         }
