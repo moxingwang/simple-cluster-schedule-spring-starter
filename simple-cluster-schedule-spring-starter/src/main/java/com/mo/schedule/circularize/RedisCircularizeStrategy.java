@@ -1,6 +1,5 @@
 package com.mo.schedule.circularize;
 
-import com.alibaba.fastjson.JSON;
 import com.mo.schedule.TaskContainer;
 import com.mo.schedule.entity.MessageEvent;
 import com.mo.schedule.entity.MessageType;
@@ -48,7 +47,7 @@ public class RedisCircularizeStrategy {
         if (isLeader()) {
             //编排任务; 检查follower心跳
             Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
-            logger.info("机器数量{}", JSON.toJSONString(machines));
+            logger.info("机器数量{}", machines.size());
 
             //检查machines的心跳
             for (String machine : machines) {

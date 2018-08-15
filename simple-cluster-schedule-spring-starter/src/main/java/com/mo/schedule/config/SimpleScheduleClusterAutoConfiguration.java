@@ -1,11 +1,15 @@
-package com.mo.schedule;
+package com.mo.schedule.config;
 
 /**
  * @description:
  * @author: MoXingwang 2018-08-11 15:01
  **/
 
+import com.mo.schedule.ScheduleClusterProperties;
+import com.mo.schedule.SimpleScheduleClusterPublisher;
+import com.mo.schedule.TaskContainer;
 import com.mo.schedule.circularize.RedisCircularizeStrategy;
+import com.mo.schedule.config.RedisCircularizeStrategyConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

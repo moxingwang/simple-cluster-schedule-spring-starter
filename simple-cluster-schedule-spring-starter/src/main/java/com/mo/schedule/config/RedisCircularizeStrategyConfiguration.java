@@ -1,4 +1,4 @@
-package com.mo.schedule;
+package com.mo.schedule.config;
 
 import com.mo.schedule.circularize.RedisCircularizeStrategy;
 import com.mo.schedule.circularize.RedisMessageListenerStrategy;

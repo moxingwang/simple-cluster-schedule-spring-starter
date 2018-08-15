@@ -1,6 +1,6 @@
 package com.mo.schedule.annotation;
 
-import com.mo.schedule.SimpleScheduleClusterAutoConfiguration;
+import com.mo.schedule.config.SimpleScheduleClusterAutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

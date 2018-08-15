@@ -1,4 +1,4 @@
-package com.mo.lottery.config;
+package com.mo.schedule.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
