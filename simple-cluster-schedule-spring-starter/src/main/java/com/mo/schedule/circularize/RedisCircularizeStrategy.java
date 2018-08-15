@@ -57,6 +57,7 @@ public class RedisCircularizeStrategy {
                         //清除这台机器并且收回所有任务
                         redisTemplate.opsForSet().unionAndStore(RedisKey.TASKS, RedisKey.TASKS_OWNER + machine, RedisKey.TASKS);
                         redisTemplate.opsForSet().remove(RedisKey.REGISTRY_MACHINE_LIST, machine);
+                        redisTemplate.delete(RedisKey.TASKS_OWNER + machine);
                     }
                 }
             }
@@ -154,8 +155,8 @@ public class RedisCircularizeStrategy {
 
         redisTemplate.opsForValue().set(RedisKey.FOLLOWER + MACHINE_ID, "1", 10, TimeUnit.SECONDS);
         redisTemplate.opsForSet().add(RedisKey.REGISTRY_MACHINE_LIST, MACHINE_ID);
-        //key永久存储
-        redisTemplate.expire(RedisKey.REGISTRY_MACHINE_LIST, Integer.MAX_VALUE, TimeUnit.DAYS);
+        redisTemplate.expire(RedisKey.REGISTRY_MACHINE_LIST, 30, TimeUnit.DAYS);
+        redisTemplate.expire(RedisKey.TASKS_OWNER + MACHINE_ID, 10, TimeUnit.DAYS);
     }
 
     public boolean isLeader() {
