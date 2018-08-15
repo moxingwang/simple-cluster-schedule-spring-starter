@@ -1,15 +1,9 @@
 package com.mo.schedule.config;
 
-/**
- * @description:
- * @author: MoXingwang 2018-08-11 15:01
- **/
-
 import com.mo.schedule.ScheduleClusterProperties;
 import com.mo.schedule.SimpleScheduleClusterPublisher;
 import com.mo.schedule.TaskContainer;
 import com.mo.schedule.circularize.RedisCircularizeStrategy;
-import com.mo.schedule.config.RedisCircularizeStrategyConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -21,6 +15,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+/**
+ * @description:
+ * @author: MoXingwang 2018-08-11 15:01
+ **/
 @Configuration
 @EnableScheduling
 @EnableConfigurationProperties(ScheduleClusterProperties.class)
@@ -51,7 +49,7 @@ public class SimpleScheduleClusterAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(SimpleScheduleClusterPublisher.class)
     public SimpleScheduleClusterPublisher defaultSimpleScheduleClusterPublisher(RedisTemplate redisTemplate) {
-        SimpleScheduleClusterPublisher simpleScheduleClusterPublisher = new SimpleScheduleClusterPublisher(redisTemplate,scheduleClusterProperties.getPackageName());
+        SimpleScheduleClusterPublisher simpleScheduleClusterPublisher = new SimpleScheduleClusterPublisher(redisTemplate, scheduleClusterProperties.getPackageName());
         return simpleScheduleClusterPublisher;
     }
 }
