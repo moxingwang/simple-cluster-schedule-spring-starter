@@ -36,9 +36,9 @@ public class RedisCircularizeStrategy {
     public void leaderHeartbeat() {
         //心跳维持
         if (isLeader()) {
-            redisTemplate.opsForValue().set(RedisKey.LEADER, MACHINE_ID, 5, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(RedisKey.LEADER, MACHINE_ID, 10, TimeUnit.SECONDS);
         } else {
-            redisTemplate.opsForValue().set(RedisKey.FOLLOWER + MACHINE_ID, "1", 5, TimeUnit.SECONDS);
+            redisTemplate.opsForValue().set(RedisKey.FOLLOWER + MACHINE_ID, "1", 10, TimeUnit.SECONDS);
         }
 
         if (isLeader()) {
@@ -64,7 +64,7 @@ public class RedisCircularizeStrategy {
                 //leader已不存在,自己竞选leader
                 boolean success = redisTemplate.opsForValue().setIfAbsent(RedisKey.LEADER, MACHINE_ID);
                 if (success) {
-                    redisTemplate.opsForValue().set(RedisKey.LEADER, MACHINE_ID, 5, TimeUnit.SECONDS);
+                    redisTemplate.opsForValue().set(RedisKey.LEADER, MACHINE_ID, 10, TimeUnit.SECONDS);
                     leaderID = MACHINE_ID;
                 }
             }
