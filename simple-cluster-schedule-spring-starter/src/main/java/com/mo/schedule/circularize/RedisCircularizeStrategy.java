@@ -32,7 +32,7 @@ public class RedisCircularizeStrategy {
     //定时向leader发送消息，收到leader的回复广播验证本地leader
 
 
-    @Scheduled(fixedRate = 3000)
+    @Scheduled(fixedRate = 5000)
     public void leaderHeartbeat() {
         //心跳维持
         if (isLeader()) {
@@ -47,34 +47,16 @@ public class RedisCircularizeStrategy {
             System.out.println("机器数量" + JSON.toJSONString(machines));
 
             //检查machines的心跳
-            Set<String> realMachines = new HashSet<>(machines);
             for (String machine : machines) {
                 if (!MACHINE_ID.equals(machine)) {
                     Object machineObj = redisTemplate.opsForValue().get(RedisKey.FOLLOWER + machine);
                     if (null == machineObj) {
                         //清除这台机器并且收回所有任务
-
-                        //todo 添加事务
-                        Set<Task> tasks = redisTemplate.opsForSet().members(RedisKey.TASKS_OWNER + machine);
-                        if (!CollectionUtils.isEmpty(tasks)) {
-                            for (Task task : tasks) {
-                                redisTemplate.opsForSet().add(RedisKey.TASKS, task);
-                            }
-                        }
-
-                        realMachines.remove(machine);
+                        redisTemplate.opsForSet().unionAndStore(RedisKey.TASKS, RedisKey.TASKS_OWNER + machine, RedisKey.TASKS);
                         redisTemplate.opsForSet().remove(RedisKey.REGISTRY_MACHINE_LIST, machine);
                     }
                 }
             }
-
-            Map<String, Long> arrange = new HashMap<>();
-
-            for (String machine : realMachines) {
-                arrange.put(machine, redisTemplate.opsForSet().size(RedisKey.TASKS_OWNER + machine));
-            }
-
-            arrangeTasks(arrange);
         } else {
             //检测leader的存在性
             Object leader = redisTemplate.opsForValue().get(RedisKey.LEADER);
@@ -87,6 +69,19 @@ public class RedisCircularizeStrategy {
                 }
             }
         }
+    }
+
+
+    @Scheduled(fixedRate = 5000)
+    public void taskPolling() {
+        Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
+        Map<String, Long> arrange = new HashMap<>();
+
+        for (String machine : machines) {
+            arrange.put(machine, redisTemplate.opsForSet().size(RedisKey.TASKS_OWNER + machine));
+        }
+
+        arrangeTasks(arrange);
     }
 
     private void arrangeTasks(Map<String, Long> arrange) {
