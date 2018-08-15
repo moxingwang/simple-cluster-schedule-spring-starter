@@ -6,6 +6,8 @@ import com.mo.schedule.entity.MessageEvent;
 import com.mo.schedule.entity.MessageType;
 import com.mo.schedule.entity.RedisKey;
 import com.mo.schedule.entity.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
@@ -18,6 +20,8 @@ import java.util.concurrent.TimeUnit;
  * @author: MoXingwang 2018-08-11 15:17
  **/
 public class RedisCircularizeStrategy {
+    private static final Logger logger = LoggerFactory.getLogger(RedisCircularizeStrategy.class);
+
     //每个应用启动后的唯一标识
     public static final String MACHINE_ID = UUID.randomUUID().toString();
 
@@ -44,7 +48,7 @@ public class RedisCircularizeStrategy {
         if (isLeader()) {
             //编排任务; 检查follower心跳
             Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
-            System.out.println("机器数量" + JSON.toJSONString(machines));
+            logger.info("机器数量{}" , JSON.toJSONString(machines));
 
             //检查machines的心跳
             for (String machine : machines) {
