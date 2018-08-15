@@ -33,9 +33,6 @@ public class RedisCircularizeStrategy {
      */
     private String leaderID = null;
 
-    //定时向leader发送消息，收到leader的回复广播验证本地leader
-
-
     @Scheduled(fixedRate = 5000)
     public void leaderHeartbeat() {
         //心跳维持
@@ -46,7 +43,7 @@ public class RedisCircularizeStrategy {
         }
 
         if (isLeader()) {
-            //编排任务; 检查follower心跳
+            //检查follower心跳
             Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
 
             //检查machines的心跳
@@ -61,6 +58,7 @@ public class RedisCircularizeStrategy {
                 }
             }
         } else {
+            //维持心跳列表
             redisTemplate.opsForSet().add(RedisKey.REGISTRY_MACHINE_LIST, MACHINE_ID);
 
             //检测leader的存在性
@@ -76,10 +74,12 @@ public class RedisCircularizeStrategy {
         }
     }
 
-
+    /**
+     * 编排任务;
+     */
     @Scheduled(fixedRate = 5000)
     public void taskPolling() {
-        if (!isLeader()){
+        if (!isLeader()) {
             return;
         }
         Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
