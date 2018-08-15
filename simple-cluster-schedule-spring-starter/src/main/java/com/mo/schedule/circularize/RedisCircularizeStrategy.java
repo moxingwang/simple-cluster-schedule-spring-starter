@@ -100,12 +100,12 @@ public class RedisCircularizeStrategy {
         }
         for (Map.Entry<String, Long> entry : arrange.entrySet()) {
             totalUnExeTaskSize = redisTemplate.opsForSet().size(RedisKey.TASKS);
-            if (totalUnExeTaskSize < 0) {
+            if (totalUnExeTaskSize <= 0) {
                 return;
             }
             if (entry.getValue() < 300) {
                 List<Task> tasks = new ArrayList<>();
-                for (int i = 0; i < 300; i++) {
+                for (int i = 0; i < 300 - entry.getValue(); i++) {
                     Task task = (Task) redisTemplate.opsForSet().pop(RedisKey.TASKS);
                     if (null == task) {
                         break;
