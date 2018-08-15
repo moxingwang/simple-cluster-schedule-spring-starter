@@ -79,6 +79,9 @@ public class RedisCircularizeStrategy {
 
     @Scheduled(fixedRate = 5000)
     public void taskPolling() {
+        if (!isLeader()){
+            return;
+        }
         Set<String> machines = redisTemplate.opsForSet().members(RedisKey.REGISTRY_MACHINE_LIST);
         Map<String, Long> arrange = new HashMap<>();
 
