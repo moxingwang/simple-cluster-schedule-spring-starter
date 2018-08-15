@@ -24,7 +24,7 @@ public class IndexController {
     private SimpleScheduleClusterPublisher simpleScheduleClusterPublisher;
 
     /**
-     * 发布任务
+     * 发布任务测试
      */
     @GetMapping("/push")
     public String push() {
